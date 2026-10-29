@@ -1,8 +1,11 @@
 package com.qin.launcher;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.os.Bundle;
+import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import java.io.File;
@@ -28,6 +31,11 @@ public class ScanActivity extends Activity {
     @Override
     protected void onCreate(Bundle b) {
         super.onCreate(b);
+        LinearLayout root = new LinearLayout(this);
+        root.setOrientation(LinearLayout.VERTICAL);
+        final LinearLayout buttons = new LinearLayout(this);
+        buttons.setOrientation(LinearLayout.HORIZONTAL);
+        root.addView(buttons);
         ScrollView sv = new ScrollView(this);
         out = new TextView(this);
         out.setTextIsSelectable(true);
@@ -35,7 +43,8 @@ public class ScanActivity extends Activity {
         out.setPadding(24, 24, 24, 24);
         out.setText("جارٍ الفحص... قد يستغرق دقيقة أو دقيقتين");
         sv.addView(out);
-        setContentView(sv);
+        root.addView(sv, new LinearLayout.LayoutParams(-1, 0, 1));
+        setContentView(root);
         new Thread(() -> {
             String r;
             try {
@@ -44,7 +53,30 @@ public class ScanActivity extends Activity {
                 r = "خطأ: " + t;
             }
             final String f = r;
-            runOnUiThread(() -> out.setText(f));
+            runOnUiThread(() -> {
+                out.setText(f);
+                int pos = 0, part = 1;
+                while (pos < f.length()) {
+                    int end = Math.min(f.length(), pos + 25000);
+                    if (end < f.length()) {
+                        int nl = f.lastIndexOf('\n', end);
+                        if (nl > pos) end = nl;
+                    }
+                    final String chunk = f.substring(pos, end);
+                    final int num = part;
+                    Button bt = new Button(this);
+                    bt.setText("إرسال الجزء " + num);
+                    bt.setOnClickListener(v -> {
+                        Intent i = new Intent(Intent.ACTION_SEND);
+                        i.setType("text/plain");
+                        i.putExtra(Intent.EXTRA_TEXT, "الجزء " + num + "\n" + chunk);
+                        startActivity(Intent.createChooser(i, "إرسال"));
+                    });
+                    buttons.addView(bt);
+                    pos = end;
+                    part++;
+                }
+            });
             try {
                 FileWriter w = new FileWriter(new File(getExternalFilesDir(null), "scan.txt"));
                 w.write(f);
@@ -124,7 +156,7 @@ public class ScanActivity extends Activity {
         sb.append("ملفات تم فحصها: ").append(filesScanned).append("\n");
         sb.append("عدد الأصناف المكتشفة: ").append(names.size()).append("\n\n");
         sb.append(log).append("\n");
-        for (String n : names) sb.append(n).append("\n");
+        for (String n : names) if (!n.contains("$")) sb.append(n).append("\n");
         sb.append("\n===== الأصناف القابلة للتحميل ودوالها =====\n");
         int loadable = 0;
         for (String n : names) {
@@ -148,7 +180,7 @@ public class ScanActivity extends Activity {
             } catch (Throwable t) {
                 // not loadable
             }
-            if (sb.length() > 90000) { sb.append("\n...اقتُطع..."); break; }
+            if (sb.length() > 60000) { sb.append("\n...اقتُطع..."); break; }
         }
         sb.append("\nعدد القابل للتحميل: ").append(loadable).append("\n");
         return sb.toString();
