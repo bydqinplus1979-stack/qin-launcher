@@ -64,9 +64,13 @@ public class MainActivity extends Activity implements LocationListener {
                   Button probe = new Button(this);
                   probe.setText("قراءة بيانات السيارة");
                   probe.setOnClickListener(v -> startActivity(new Intent(this, ProbeActivity.class)));
+                  Button provider = new Button(this);
+                  provider.setText("اختبار مزود البيانات");
+                  provider.setOnClickListener(v -> startActivity(new Intent(this, ProviderTestActivity.class)));
         top.addView(clockView, new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1));
         top.addView(speedView, new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1));
         top.addView(probe, new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1));
+                  top.addView(provider, new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1));
                   top.addView(scan, new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1));
         root.addView(top);
 
