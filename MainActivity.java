@@ -50,6 +50,12 @@ public class MainActivity extends Activity implements LocationListener {
         LinearLayout top = new LinearLayout(this);
         top.setOrientation(LinearLayout.HORIZONTAL);
         top.setGravity(Gravity.CENTER_VERTICAL);
+        TextView buildTag = new TextView(this);
+        buildTag.setText("build v6");
+        buildTag.setTextSize(12);
+        buildTag.setTextColor(Color.parseColor("#888888"));
+        root.addView(buildTag);
+
         clockView = new TextView(this);
         clockView.setTextSize(40);
         clockView.setTextColor(Color.WHITE);
