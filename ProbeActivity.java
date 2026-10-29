@@ -37,9 +37,9 @@ public class ProbeActivity extends Activity {
     TreeSet<String> names = new TreeSet<>();
     LinearLayout buttons;
     static final String[] BASES = {"AC","ADAS","AUDIO","AUX","BIGDATA","BODYWORK","CHARGING","COLLISION","DOORLOCK",
-        "REAR_VIEW_MIRROR","DTC","ENERGY","ENGINE","FUNCNOTICE","GB","GEARBOX","INSTRUMENT","LIGHT","LOCATION","MOTOR",
-        "MQTT","OTA","PANORAMA","PHONE","RADAR","SAFETYBELT","SECURITY","SENSOR","SETTING","SPEED","STATISTIC","TYRE",
-        "PM2P5","WIPER","SEAT","MULTIMEDIA"};
+        "DOOR_LOCK","REAR_VIEW_MIRROR","DTC","ENERGY","ENGINE","FUNCNOTICE","GB","GEARBOX","INSTRUMENT","LIGHT",
+        "LOCATION","MOTOR","MQTT","OTA","PANORAMA","PHONE","RADAR","SAFETY_BELT","SECURITY","SENSOR","SETTING",
+        "SPEED","STATISTIC","TYRE","PM2P5","WIPER","SEAT","MULTIMEDIA","TIME"};
 
     @Override
     protected void onCreate(Bundle b) {
@@ -60,7 +60,7 @@ public class ProbeActivity extends Activity {
         setContentView(root);
         ArrayList<String> req = new ArrayList<>();
         for (String x : BASES) {
-            String p = "android.permission.BYDAUTO_" + x + "_GET";
+            String p = "android.permission.BYDAUTO_" + x + "_COMMON";
             if (checkSelfPermission(p) != 0) req.add(p);
         }
         if (req.isEmpty()) startProbe();
@@ -224,11 +224,11 @@ public class ProbeActivity extends Activity {
     }
 
     String permReport() {
-        StringBuilder sb = new StringBuilder("== الصلاحيات (قراءة GET فقط) ==\n");
+        StringBuilder sb = new StringBuilder("== الصلاحيات (الصلاحيات العامة COMMON) ==\n");
         int granted = 0;
         ArrayList<String> missing = new ArrayList<>();
         for (String x : BASES) {
-            String p = "android.permission.BYDAUTO_" + x + "_GET";
+            String p = "android.permission.BYDAUTO_" + x + "_COMMON";
             String lvl;
             try {
                 PermissionInfo pi = getPackageManager().getPermissionInfo(p, 0);
@@ -244,14 +244,6 @@ public class ProbeActivity extends Activity {
             sb.append(x).append(": ").append(lvl).append(g ? " ✔" : " ✘").append("\n");
         }
         sb.append("ممنوحة: ").append(granted).append(" من ").append(BASES.length).append("\n");
-        if (!missing.isEmpty()) {
-            StringBuilder cmd = new StringBuilder("id; ");
-            for (String p : missing) cmd.append("pm grant com.qin.launcher ").append(p).append(" 2>&1 | head -n 1; ");
-            sb.append("\n== محاولة منح الصلاحيات عبر root ==\n").append(sh(cmd.toString()));
-            int g2 = 0;
-            for (String p : missing) if (checkSelfPermission(p) == 0) g2++;
-            sb.append("بعد المحاولة، ممنوحة إضافية: ").append(g2).append("\n");
-        }
         sb.append("\n");
         return sb.toString();
     }
