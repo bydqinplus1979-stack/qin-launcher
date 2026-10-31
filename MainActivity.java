@@ -51,7 +51,7 @@ public class MainActivity extends Activity implements LocationListener {
         top.setOrientation(LinearLayout.HORIZONTAL);
         top.setGravity(Gravity.CENTER_VERTICAL);
         TextView buildTag = new TextView(this);
-        buildTag.setText("Aldarawsheh Launcher - build v9");
+        buildTag.setText("Aldarawsheh Launcher - build v10");
         buildTag.setTextSize(12);
         buildTag.setTextColor(Color.parseColor("#888888"));
         root.addView(buildTag);
@@ -67,17 +67,21 @@ public class MainActivity extends Activity implements LocationListener {
         Button scan = new Button(this);
         scan.setText("فحص واجهات السيارة (BYD)");
         scan.setOnClickListener(v -> startActivity(new Intent(this, ScanActivity.class)));
-                  Button probe = new Button(this);
-                  probe.setText("قراءة بيانات السيارة");
-                  probe.setOnClickListener(v -> startActivity(new Intent(this, ProbeActivity.class)));
-                  Button provider = new Button(this);
-                  provider.setText("اختبار مزود البيانات");
-                  provider.setOnClickListener(v -> startActivity(new Intent(this, ProviderTestActivity.class)));
+        Button probe = new Button(this);
+        probe.setText("قراءة بيانات السيارة");
+        probe.setOnClickListener(v -> startActivity(new Intent(this, ProbeActivity.class)));
+        Button provider = new Button(this);
+        provider.setText("اختبار مزود البيانات");
+        provider.setOnClickListener(v -> startActivity(new Intent(this, ProviderTestActivity.class)));
+        Button voice = new Button(this);
+        voice.setText("🎤 التحكم الصوتي");
+        voice.setOnClickListener(v -> startActivity(new Intent(this, VoiceActivity.class)));
         top.addView(clockView, new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1));
         top.addView(speedView, new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1));
         top.addView(probe, new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1));
-                  top.addView(provider, new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1));
-                  top.addView(scan, new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1));
+        top.addView(provider, new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1));
+        top.addView(voice, new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1));
+        top.addView(scan, new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1));
         root.addView(top);
 
         final PackageManager pm = getPackageManager();
