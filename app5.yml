@@ -1,4 +1,4 @@
-name: Build APK v6
+name: Build APK v10
 on:
   push:
   workflow_dispatch:
@@ -39,8 +39,8 @@ jobs:
                   applicationId 'com.qin.launcher'
                   minSdk 28
                   targetSdk 28
-                  versionCode 6
-                  versionName '0.6'
+                  versionCode 10
+                  versionName '0.10'
               }
               compileOptions {
                   sourceCompatibility JavaVersion.VERSION_17
@@ -55,14 +55,16 @@ jobs:
             echo '<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>'
             echo '<uses-permission android:name="android.permission.QUERY_ALL_PACKAGES"/>'
             echo '<uses-permission android:name="com.byd.permission.carstatus.READ_PROVIDER"/>'
+            echo '<uses-permission android:name="android.permission.RECORD_AUDIO"/>'
             for p in $(cat perms.txt); do
               echo "<uses-permission android:name=\"android.permission.BYDAUTO_${p}_COMMON\"/>"
             done
-            echo '<application android:label="Qin Launcher" android:largeHeap="true" android:theme="@android:style/Theme.Material.NoActionBar">'
-            echo '<activity android:name=".MainActivity" android:exported="true"><intent-filter><action android:name="android.intent.action.MAIN"/><category android:name="android.intent.category.LAUNCHER"/></intent-filter></activity>'
+            echo '<application android:label="Aldarawsheh Launcher" android:largeHeap="true" android:theme="@android:style/Theme.Material.NoActionBar">'
+            echo '<activity android:name=".MainActivity" android:exported="true"><intent-filter><action android:name="android.intent.action.MAIN"/><category android:name="android.intent.category.LAUNCHER"/></intent-filter><intent-filter><action android:name="android.intent.action.MAIN"/><category android:name="android.intent.category.HOME"/><category android:name="android.intent.category.DEFAULT"/></intent-filter></activity>'
             echo '<activity android:name=".ScanActivity" android:exported="false"/>'
             echo '<activity android:name=".ProbeActivity" android:exported="false"/>'
             echo '<activity android:name=".ProviderTestActivity" android:exported="false"/>'
+            echo '<activity android:name=".VoiceActivity" android:exported="false"/>'
             echo '</application></manifest>'
           } > $M
           echo "----- MANIFEST -----"
